@@ -77,9 +77,9 @@ class Reader(object):
                 self.last_command_1hour = current_time
                 return ReaderParam.timing[ReaderState.QUERY]
             if current_time - self.last_command_12hour>=12*60*60:
-                self.state == ReaderState.SENSOR_DATA
+                self.state == ReaderState.SELECT
                 self.last_command_12hour = current_time
-                return ReaderParam.timing[ReaderState.SENSOR_DATA]
+                return ReaderParam.timing[ReaderState.SELECT]
         elif self.state == ReaderState.SAMPLE_DATA:
             self.state = ReaderState.SLEEP
             return ReaderParam.timing[ReaderState.SLEEP]
