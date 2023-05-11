@@ -2,16 +2,17 @@
 
 import random
 from global_params import *
+from reader import *
 
 ''' Class of tag states'''
 class TagState(object):
-    READY = 0
-    ARBITRATE = 1
-    REPLY = 2
-    ACKNOWLEDGED = 3
-    OPEN = 4
-    SECURED = 5
-    KILLED = 6
+    READY = 5
+    ARBITRATE = 10
+    REPLY = 15
+    ACKNOWLEDGED = 20
+    OPEN = 25
+    SECURED = 30
+    KILLED = 35
 
 
 ''' Class of tag radio states'''
@@ -41,42 +42,53 @@ class Tag(object):
         self.ID = ID
         self.loc = loc
         self.state = state
-        self.slot_counter = 0
+        #self.slot_counter = 0
 
         self.flag_SL = 0
         self.flag_inventorized = 0
 
     # following the state transitions in Annex B and C:
     # https://cdn.sparkfun.com/assets/learn_tutorials/6/1/3/Gen2_Protocol_Standard.pdf
-    def next_state(self, next_state):
+    def next_state(self):
 
         # READY (Sec. 6.3.2.6.1)
         if self.state == TagState.READY:
-            if self.slot_counter == 0:
-                self.state = TagState.REPLY
-            else:
-                self.state = TagState.ARBITRATE
+            #if self.slot_counter == 0:
+            self.state = TagState.REPLY
+            print("Tag State:",self.state)
+            # else:
+            #     self.state = TagState.ARBITRATE
+            #     print("Tag State:",self.state)
         # ARBITRATE (Sec. 6.3.2.6.2)
         elif self.state == TagState.ARBITRATE:
             if self.slot_counter == 0:
                 self.state = TagState.REPLY
+                self.flag_inventorized = 1
+                print("Tag State:",self.state)
             elif self.slot_counter != 0:
                 self.slot_counter = self.slot_counter - 1
+                print("Tag State:",self.state)
         # REPLY (Sec. 6.3.2.6.3)
         elif self.state == TagState.REPLY:
             # TODO: if receving an ack from the reader
             # now assume that the acking is always successful
-            if true:
+            
+            if True:
                 self.state = TagState.ACKNOWLEDGED
+                
+                print("Tag State:",self.state)
             else:
                 self.state = TagState.ARBITRATE
+                print("Tag State:",self.state)
         # ACKNOWLEDGED (Sec. 6.3.2.6.4)
         elif self.state == TagState.ACKNOWLEDGED:
             # TODO:
-            if ture:
+            if True:
                 self.state = TagState.READY
+                print("Tag State:",self.state)
             else:
                 self.state = TagState.ARBITRATE
+                print("Tag State:",self.state)
         else:
             pass
 
